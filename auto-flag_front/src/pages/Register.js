@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { OpenAI } from 'openai';
-import config from "../Apikeys.js";
 
 function Register() {
     const [image, setImage] = useState(null);
@@ -12,8 +11,8 @@ function Register() {
     const [memo, setMemo] = useState('');
 
     const GOOGLE_CLOUD_VISION_API_KEY = process.env.REACT_APP_GOOGLE_CLOUD_VISION_API_KEY;
-    const GOOGLE_CLOUD_GEOCODING_API_KEY = process.env.GOOGLE_CLOUD_GEOCODING_API_KEY;
-    const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+    const GOOGLE_CLOUD_GEOCODING_API_KEY = process.env.REACT_APP_GOOGLE_CLOUD_GEOCODING_API_KEY;
+    const OPENAI_API_KEY = process.env.REACT_APP_OPENAI_API_KEY;
 
     const openai = new OpenAI({
         apiKey: OPENAI_API_KEY,
