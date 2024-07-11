@@ -11,9 +11,9 @@ function Register() {
     const [longitude, setLongitude] = useState('');
     const [memo, setMemo] = useState('');
 
-    const GOOGLE_CLOUD_VISION_API_KEY = config.GOOGLE_CLOUD_VISION_API_KEY;
-    const GOOGLE_CLOUD_GEOCODING_API_KEY = config.GOOGLE_CLOUD_GEOCODING_API_KEY;
-    const OPENAI_API_KEY = config. OPENAI_API_KEY;
+    const GOOGLE_CLOUD_VISION_API_KEY = process.env.REACT_APP_GOOGLE_CLOUD_VISION_API_KEY;
+    const GOOGLE_CLOUD_GEOCODING_API_KEY = process.env.GOOGLE_CLOUD_GEOCODING_API_KEY;
+    const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
     const openai = new OpenAI({
         apiKey: OPENAI_API_KEY,

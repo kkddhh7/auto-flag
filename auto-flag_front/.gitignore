@@ -6,7 +6,7 @@
 .DS_Store
 .AppleDouble
 .LSOverride
-Apikeys.js
+.env
 
 # Icon must end with two \r
 Icon
