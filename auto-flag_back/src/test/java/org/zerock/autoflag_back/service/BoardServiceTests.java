@@ -59,7 +59,7 @@ public class BoardServiceTests {
         PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
 
         log.info(responseDTO);
-        
+
     }
 
 }
