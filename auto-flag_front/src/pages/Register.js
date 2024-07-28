@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { OpenAI } from 'openai';
+import { useNavigate } from "react-router-dom"
 
 function Register() {
     const [image, setImage] = useState(null);
@@ -9,6 +10,8 @@ function Register() {
     const [latitude, setLatitude] = useState('');
     const [longitude, setLongitude] = useState('');
     const [memo, setMemo] = useState('');
+
+    const navigate = useNavigate();
 
     const GOOGLE_CLOUD_VISION_API_KEY = process.env.REACT_APP_GOOGLE_CLOUD_VISION_API_KEY;
     const GOOGLE_CLOUD_GEOCODING_API_KEY = process.env.REACT_APP_GOOGLE_CLOUD_GEOCODING_API_KEY;
@@ -122,13 +125,37 @@ function Register() {
         }
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log('Image:', image);
-        console.log('Address:', address);
-        console.log('Latitude:', latitude);
-        console.log('Longitude:', longitude);
-        console.log('Memo:', memo);
+
+        const formData = new FormData();
+
+        console.log("Form Data:");
+        console.log("Address:", address);
+        console.log("Latitude:", latitude);
+        console.log("Longitude:", longitude);
+        console.log("Memo:", memo);
+
+        //formData.append('Image:', image);
+        formData.append('address', address);
+        formData.append('latitude', latitude);
+        formData.append('longitude', longitude);
+        formData.append('memo', memo);
+
+        try {
+            const response = await axios.post("/board/register", formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            });
+      
+            if (response.status === 200) {
+              console.log("Registration successful");
+              navigate("/list");
+            }
+          } catch (error) {
+            console.error("Registration failed", error);
+          }
     };
 
     const handleReset = () => {
@@ -171,7 +198,7 @@ function Register() {
                 <br />
                 <label>
                     Memo:
-                    <input type="text" value={memo} readOnly />
+                    <input type="text" value={memo} onChange={(e) => setMemo(e.target.value)}/>
                 </label>
                 <br />
                 <button type="submit">Submit</button>
