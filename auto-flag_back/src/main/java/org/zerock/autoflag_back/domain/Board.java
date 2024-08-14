@@ -28,6 +28,9 @@ public class Board extends BaseEntity {
     @Column(length = 500)
     private String memo;
 
+    @Column(length = 255, name = "imagePath") // 적절한 길이를 설정
+    private String imagePath; // 이미지 경로를 저장할 필드
+
     public void change(String address, double latitude, double longitude, String memo) {
         this.address = address;
         this.latitude = latitude;

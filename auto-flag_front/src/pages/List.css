@@ -1,0 +1,43 @@
+.total-container {
+    display: flex;
+
+    border: 1px solid black;
+}
+
+.list-container {
+    flex: 1;
+
+    border: 1px solid red;
+}
+
+.list-container th, .list-container td {
+    padding: 10px; /* 셀 내부 여백 추가 */
+    text-align: left; /* 왼쪽 정렬 */
+  }
+  
+  .list-item {
+    cursor: pointer; /* 클릭 가능한 느낌 제공 */
+    transition: background-color 0.3s, color 0.3s; /* 배경색과 글자색 변화에 애니메이션 추가 */
+  }
+  
+  .list-item:hover {
+    background-color: #f0f0f0; /* 마우스를 올렸을 때 배경색 변경 */
+    color: #333; /* 마우스를 올렸을 때 글자색 변경 */
+  }
+
+.detail-container {
+    flex: 1;
+
+    border: 1px solid blue;
+}
+
+.selected-image {
+    max-width: 100%;
+    max-height: 80vh;
+    margin-top: 10px; /* 이미지 위쪽 여백 추가 */
+}
+
+.map-container {
+    width: 100%;
+    height: 400px; /* 지도의 높이를 설정합니다 */
+}

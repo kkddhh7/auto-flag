@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.zerock.autoflag_back.domain.Board;
 import org.zerock.autoflag_back.dto.BoardDTO;
 import org.zerock.autoflag_back.dto.PageRequestDTO;
@@ -13,6 +14,11 @@ import org.zerock.autoflag_back.dto.PageResponseDTO;
 import org.zerock.autoflag_back.repository.BoardRepository;
 
 import javax.transaction.Transactional;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,15 +33,40 @@ public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
 
+    private static final String UPLOAD_DIRECTORY = "/Users/kkddhh/Desktop/project/auto-flag/auto-flag_back/uploads";
+
     @Override
-    public Long register(BoardDTO boardDTO) {
-
+    public Long register(BoardDTO boardDTO, MultipartFile image) {
+        // 이미 BoardController에서 이미지 저장과 경로 설정이 완료되었으므로, 이 부분에서는 저장 로직을 제거합니다.
         Board board = modelMapper.map(boardDTO, Board.class);
-
         Long bno = boardRepository.save(board).getBno();
+        log.info("Board entity saved with Bno: " + bno);
 
         return bno;
     }
+
+
+    private String saveImage(MultipartFile image) throws IOException {
+        byte[] bytes = image.getBytes();
+        Path path = Paths.get(UPLOAD_DIRECTORY, image.getOriginalFilename());
+
+        // 디렉터리가 존재하지 않으면 생성
+        File directory = new File(UPLOAD_DIRECTORY);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+
+        try {
+            Files.write(path, bytes);
+            log.info("Image successfully written to: " + path.toString());
+        } catch (IOException e) {
+            log.error("Error writing image to: " + path.toString(), e);
+            throw e; // Re-throw the exception to handle it in the calling method
+        }
+
+        return path.toString();
+    }
+
 
     @Override
     public BoardDTO readOne(Long bno) {
@@ -50,21 +81,25 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public void modify(BoardDTO boardDTO) {
+    public void modify(Long bno, BoardDTO boardDTO) {
+        Optional<Board> result = boardRepository.findById(bno);
+        if (result.isPresent()) {
+            Board board = result.get();
+            board.change(boardDTO.getAddress(), boardDTO.getLatitude(), boardDTO.getLongitude(), boardDTO.getMemo());
 
-        Optional<Board> result = boardRepository.findById(boardDTO.getBno());
-
-        Board board = result.orElseThrow();
-
-        board.change(boardDTO.getAddress(), boardDTO.getLatitude(), boardDTO.getLongitude(), boardDTO.getMemo());
-
-        boardRepository.save(board);
+            boardRepository.save(board);
+        } else {
+            throw new RuntimeException("Board not found with BNO: " + bno);
+        }
     }
 
     @Override
     public void remove(Long bno) {
-
-        boardRepository.deleteById(bno);
+        if (boardRepository.existsById(bno)) {
+            boardRepository.deleteById(bno);
+        } else {
+            throw new RuntimeException("Board not found with BNO: " + bno);
+        }
     }
 
     @Override

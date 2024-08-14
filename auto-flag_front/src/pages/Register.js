@@ -135,8 +135,9 @@ function Register() {
         console.log("Latitude:", latitude);
         console.log("Longitude:", longitude);
         console.log("Memo:", memo);
+        console.log("Image:", image);
 
-        //formData.append('Image:', image);
+        formData.append('image', image);
         formData.append('address', address);
         formData.append('latitude', latitude);
         formData.append('longitude', longitude);
